@@ -1,18 +1,11 @@
 var express = require('express');
 var router = express.Router();
 const sql = require('mssql');
-var datosConexion = require;
-
-const config = {
-  user: 'usuariotest',
-  password: 'Dao*test*2019',
-  server: '192.168.16.45',
-  database: 'BASEDATOSINGENIAPRUEBAS',
-};
+var conection = require('./conection');
 
 /* GET lista de usuarios */
 router.get('/', function(req, res, next) {
-  sql.connect(config, err => {
+  sql.connect(conection, err => {
     new sql.Request().query('select * from TablaPrueba', (err, result) => {
         console.dir(result.recordset);
         res.json(result.recordset);
