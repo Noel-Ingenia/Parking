@@ -1,3 +1,5 @@
+var pruebaAlvaro = "Esto es una prueba de Alvaro";
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
