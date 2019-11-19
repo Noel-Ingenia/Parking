@@ -19,6 +19,6 @@ router.get('/', function(req, res, next) {
         sql.close();
     });
   });
-});
+}); 
 
 module.exports = router;
