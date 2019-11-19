@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
         res.json(result.recordset);
         sql.close();
     });
-  });j
-}); 
+  });
+});
 
 module.exports = router;
