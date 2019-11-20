@@ -1,17 +1,12 @@
 var express = require('express');
 var router = express.Router();
 const sql = require('mssql');
+var conection = require('./conection');
 
-const config = {
-  user: 'usuariotest',
-  password: 'Dao*test*2019',
-  server: '192.168.16.45',
-  database: 'BASEDATOSINGENIAPRUEBAS',
-};
-
-sql.connect(config, err => {
+sql.connect(conection, err => {
   new sql.Request().query('select * from TablaPrueba', (err, result) => {
       console.dir(result.recordset);
+      sql.close();
     });
 });
 
