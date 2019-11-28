@@ -5,6 +5,7 @@ const config = require('../config');
 const services = require('../services/token');
 const auth = require('../middlewares/checkAuth');
 const mailer = require('../mail');
+const querys = require('../querys');
 
 // VALIDATOR PARA USERNAME
 var regexUserName = new RegExp(/^([A-Za-z0-9]){6,20}$/);
@@ -19,7 +20,7 @@ router.post('/', function(req, res, next) {
                 new sql.Request()
                 .input('UserName', sql.VarChar, req.body.UserName)
                 .input('UserPassword', sql.VarChar, req.body.UserPassword)
-                .query('SELECT * FROM Employee WHERE UserName = @UserName AND UserPassword = @UserPassword', (err, result) => {
+                .query(querys.login, (err, result) => {
                     if (err){
                         res.json(err);
                     } else {
