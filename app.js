@@ -7,18 +7,25 @@ var bodyParser = require("body-parser");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var loginRouter = require('./routes/login');
+var homeRouter = require('./routes/home');
+//var releasesRouter = require('./routes/releases'); //TEMPORAL//////////////////////////
+//var cancellationsRouter = require('./routes/cancellations'); //TEMPORAL//////////////////////////
+
+// var schedule = require('node-schedule');
+// console.log("Tarea iniciada");
+// schedule.scheduleJob('*/5 * * * * *', function(fireDate){
+//   console.log('Son las ' + fireDate.toLocaleTimeString());
+// });
 
 var app = express();
-
 app.use(bodyParser.json()); 
-
 //// allow headers
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Authorization, Accept");
   next();
-  });
-  
+});
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -31,6 +38,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/login', loginRouter);
+app.use('/home', homeRouter);
+//app.use('/releases', releasesRouter); //TEMPORAL//////////////////////////
+//app.use('/cancellations', cancellationsRouter); //TEMPORAL//////////////////////////
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -47,5 +58,4 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
 module.exports = app;
