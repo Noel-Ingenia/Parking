@@ -26,10 +26,7 @@ router.post('/', function(req, res, next) {
                     } else {
                         if (result.rowsAffected[0] == 1) {
                             var user = result.recordset[0];
-                            res.status(200).json({
-                                user,
-                                token: services.createToken(result.recordset[0])
-                            });
+                            res.status(200).json( services.createToken(result.recordset[0]) );
                         }
                         else {
                             res.json({
