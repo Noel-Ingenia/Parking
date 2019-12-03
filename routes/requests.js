@@ -7,10 +7,9 @@ const moment = require('moment');
 
 router.post('/', function(req, res) {
   if (req.query.IdUser && req.body.FirstDay && req.body.LastDay) {
-
     sql.connect(config, function(err, resp){
       if(err)console.log(err);
-
+      
       var firstDay = moment(req.body.FirstDay);
       var lastDay = moment(req.body.LastDay);
       var queryInsert = querys.requestDaysInsert + " ( @IdRequest, '" + firstDay.format().substring(0, 10) + "' )";
@@ -24,7 +23,6 @@ router.post('/', function(req, res) {
       transaction.begin(function(err) {
         if (err) console.log(err);
         let rolledBack = false
-        
         transaction.on('rollback', aborted => {
           rolledBack = true
         });
@@ -33,22 +31,12 @@ router.post('/', function(req, res) {
         request
         .input('IdUser', sql.Int, req.query.IdUser)
         .query(querys.requestInsert, function(err, result01) {
-          if(err){
-            console.log(err);
-            if(!rolledBack){
-              transaction.rollback(function(err) {  throw err;  });
-            }
-          }
+          controlError(err, rolledBack, transaction);
 
           request
           .input('IdRequest', sql.Int, result01.recordset[0].id)
           .query(queryInsert, function(err, result02) {
-            if(err){
-              console.log(err);
-              if(!rolledBack){
-                transaction.rollback(function() {  throw err;  });
-              } 
-            }
+            controlError(err, rolledBack, transaction);
 
             transaction.commit(function(err, result03) {
               if(err) console.log(err);
@@ -65,4 +53,16 @@ router.post('/', function(req, res) {
     res.json("Faltan las propiedades");
   }
 });
+
+function controlError(err, rolledBack, transaction) {
+  if (err) {
+    console.log(err);
+    if (!rolledBack) {
+      transaction.rollback(function (err) { throw err; });
+    }
+  }
+}
+
 module.exports = router;
+
+
