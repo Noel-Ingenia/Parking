@@ -6,6 +6,8 @@ function isAuth (req, res, next){
             message: "No tienes autorizacion"
         });
     }
+
+    console.log(req.headers.authorization);
     const token = req.headers.authorization;
 
     services.decodeToken(token)

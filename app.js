@@ -9,9 +9,10 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var homeRouter = require('./routes/home');
-//var releasesRouter = require('./routes/releases'); //TEMPORAL//////////////////////////
-//var cancellationsRouter = require('./routes/cancellations'); //TEMPORAL//////////////////////////
+var requestsRouter = require('./routes/requests');
+var releasesRouter = require('./routes/releases');
 
+// TAREAS AUTOMATIZADAS////////////////////////////////////////////////
 // var schedule = require('node-schedule');
 // console.log("Tarea iniciada");
 // schedule.scheduleJob('*/5 * * * * *', function(fireDate){
@@ -40,8 +41,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/home', homeRouter);
-//app.use('/releases', releasesRouter); //TEMPORAL//////////////////////////
-//app.use('/cancellations', cancellationsRouter); //TEMPORAL//////////////////////////
+app.use('/requests', requestsRouter);
+app.use('/releases', releasesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

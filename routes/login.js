@@ -43,7 +43,7 @@ router.post('/', function(req, res, next) {
             });
         }
     } else {
-        res.json("Faltan las propiedades en el body");
+        res.json("Faltan las propiedades");
     }
 });
 
