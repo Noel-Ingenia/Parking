@@ -7,7 +7,7 @@ const moment = require('moment');
 
 router.get('/', function(req, res) {
   if (req.query.IdUser) {
-    querys.QueryFunction( paramInt = req.query.IdUser, paramString = null, query = querys.releaseDaysGet )
+    querys.QueryFunction( param1 = req.query.IdUser, param2 = null, query = querys.releaseGet )
     .then( data => {
       if (data[0] != null) {
         res.json(data);
@@ -22,7 +22,6 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
   if (req.query.IdUser && req.body) {
-    console.log(req.body);
     sql.connect(config, function(err, resp){
       if(err)console.log(err);
 
@@ -60,6 +59,56 @@ router.post('/', function(req, res) {
                 console.log("Transaction commited.");
                 res.json("Insercion realizada");
               } 
+            });
+          }); 
+        });
+      });
+    });
+  } else {
+    res.json("Faltan las propiedades");
+  }
+});
+
+router.delete('/', function(req, res) {
+  if (req.query.IdUser && req.body) {
+    sql.connect(config, function(err, resp){
+      if(err)console.log(err);
+
+      var transaction = new sql.Transaction();
+      transaction.begin(function(err) {
+        if (err) console.log(err);
+        let rolledBack = false
+        transaction.on('rollback', aborted => {
+          rolledBack = true
+        });
+        
+        var request = new sql.Request(transaction);
+        request
+        .input('IdUser', sql.Int, req.query.IdUser)
+        .input('Date', sql.VarChar, req.body.Date)
+        .query(querys.releaseDaysUpdateRequested, function(err, result01) {
+          controlError(err, rolledBack, transaction);
+
+          request
+          .input('IdUser02', sql.Int, req.query.IdUser)
+          .input('Date02', sql.VarChar, req.body.Date)
+          .query(querys.releaseDaysDelete, function(err, result02) {
+            controlError(err, rolledBack, transaction);
+
+            console.log(result02);
+            
+            request
+            .input('IdReleased', sql.Int, result02.recordset[0].IdReleased )
+            .query(querys.releaseDelete, function(err, result03) {
+              controlError(err, rolledBack, transaction);
+
+              transaction.commit(function(err, result04) {
+                if(err) console.log(err);
+                else {
+                  console.log("Transaction commited.");
+                  res.json("Insercion realizada");
+                } 
+              });
             });
           }); 
         });

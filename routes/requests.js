@@ -5,13 +5,28 @@ const config = require('../config');
 const querys = require('../querys');
 const moment = require('moment');
 
+router.get('/', function(req, res) {
+  if (req.query.IdUser) {
+    querys.QueryFunction( param1 = req.query.IdUser, param2 = null, query = querys.requestGet )
+    .then( data => {
+      if (data[0] != null) {
+        res.json(data);
+      } else {
+        res.json("No tienes Solicitudes");
+      }
+    });
+  } else {
+    res.json("Faltan las propiedades");
+  }
+});
+
 router.post('/', function(req, res) {
-  if (req.query.IdUser && req.body.FirstDay && req.body.LastDay) {
+  if (req.query.IdUser && req.body) {
     sql.connect(config, function(err, resp){
       if(err)console.log(err);
       
-      var firstDay = moment(req.body.FirstDay);
-      var lastDay = moment(req.body.LastDay);
+      var firstDay = moment(req.body.date.begin);
+      var lastDay = moment(req.body.date.end);
       var queryInsert = querys.requestDaysInsert + " ( @IdRequest, '" + firstDay.format().substring(0, 10) + "' )";
 
       while (firstDay < lastDay) {
